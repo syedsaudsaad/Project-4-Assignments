@@ -1,51 +1,123 @@
-import pygame
-import time
+##Assignments 1 to 6
+    ##Hangman Python Project 5
 
-pygame.init()
+lives_visual_dict = {
+        0: """
+                ___________
+               | /        | 
+               |/        ( )
+               |          |
+               |         / \\
+               |
+           """,
+        1: """
+                ___________
+               | /        | 
+               |/        ( )
+               |          |
+               |         / 
+               |
+            """,
+        2: """
+                ___________
+               | /        | 
+               |/        ( )
+               |          |
+               |          
+               |
+            """,
+        3: """
+                ___________
+               | /        | 
+               |/        ( )
+               |          
+               |          
+               |
+            """,
+        4: """
+                ___________
+               | /        | 
+               |/        
+               |          
+               |          
+               |
+            """,
+        5: """
+                ___________
+               | /        
+               |/        
+               |          
+               |          
+               |
+            """,
+        6: """
+               |
+               |
+               |
+               |
+               |
+            """,
+        7: "",
+    }
 
-CANVAS_WIDTH = 400
-CANVAS_HEIGHT = 400
-CELL_SIZE = 40
-ERASER_SIZE = 20
 
-BLUE = (0, 0, 255)
-WHITE = (255, 255, 255)
-PINK = (255, 182, 193)
+import random
+from words import words
+from hangman_visual import lives_visual_dict
+import string
 
-screen = pygame.display.set_mode((CANVAS_WIDTH, CANVAS_HEIGHT))
-pygame.display.set_caption("Eraser Effect in Pygame")
 
-grid = []
-for row in range(0, CANVAS_HEIGHT, CELL_SIZE):
-    for col in range(0, CANVAS_WIDTH, CELL_SIZE):
-        rect = pygame.Rect(col, row, CELL_SIZE, CELL_SIZE)
-        grid.append(rect)
+def get_valid_word(words):
+    word = random.choice(words)  # randomly chooses something from the list
+    while '-' in word or ' ' in word:
+        word = random.choice(words)
 
-eraser = pygame.Rect(200, 200, ERASER_SIZE, ERASER_SIZE)
+    return word.upper()
 
-running = True
-while running:
-    screen.fill(WHITE)
-    
-    for rect in grid:
-        pygame.draw.rect(screen, BLUE, rect)
 
-    mouse_x, mouse_y = pygame.mouse.get_pos()
-    eraser.topleft = (mouse_x, mouse_y)
-    
-    new_grid = []
-    for rect in grid:
-        if not eraser.colliderect(rect):  
-            new_grid.append(rect)
-    grid = new_grid  
-    
-    pygame.draw.rect(screen, PINK, eraser)
-    
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            running = False
-    
-    pygame.display.flip()
-    time.sleep(0.05)
+def hangman():
+    word = get_valid_word(words)
+    word_letters = set(word)  # letters in the word
+    alphabet = set(string.ascii_uppercase)
+    used_letters = set()  # what the user has guessed
 
-pygame.quit()
+    lives = 7
+
+    # getting user input
+    while len(word_letters) > 0 and lives > 0:
+        # letters used
+        # ' '.join(['a', 'b', 'cd']) --> 'a b cd'
+        print('You have', lives, 'lives left and you have used these letters: ', ' '.join(used_letters))
+
+        # what current word is (ie W - R D)
+        word_list = [letter if letter in used_letters else '-' for letter in word]
+        print(lives_visual_dict[lives])
+        print('Current word: ', ' '.join(word_list))
+
+        user_letter = input('Guess a letter: ').upper()
+        if user_letter in alphabet - used_letters:
+            used_letters.add(user_letter)
+            if user_letter in word_letters:
+                word_letters.remove(user_letter)
+                print('')
+
+            else:
+                lives = lives - 1  # takes away a life if wrong
+                print('\nYour letter,', user_letter, 'is not in the word.')
+
+        elif user_letter in used_letters:
+            print('\nYou have already used that letter. Guess another letter.')
+
+        else:
+            print('\nThat is not a valid letter.')
+
+    # gets here when len(word_letters) == 0 OR when lives == 0
+    if lives == 0:
+        print(lives_visual_dict[lives])
+        print('You died, sorry. The word was', word)
+    else:
+        print('YAY! You guessed the word', word, '!!')
+
+
+if __name__ == '__main__':
+    hangman()
