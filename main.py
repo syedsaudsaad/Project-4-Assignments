@@ -1,123 +1,25 @@
 ##Assignments 1 to 6
-    ##Hangman Python Project 5
+##BMI calculator project 8
+import streamlit as st
 
-lives_visual_dict = {
-        0: """
-                ___________
-               | /        | 
-               |/        ( )
-               |          |
-               |         / \\
-               |
-           """,
-        1: """
-                ___________
-               | /        | 
-               |/        ( )
-               |          |
-               |         / 
-               |
-            """,
-        2: """
-                ___________
-               | /        | 
-               |/        ( )
-               |          |
-               |          
-               |
-            """,
-        3: """
-                ___________
-               | /        | 
-               |/        ( )
-               |          
-               |          
-               |
-            """,
-        4: """
-                ___________
-               | /        | 
-               |/        
-               |          
-               |          
-               |
-            """,
-        5: """
-                ___________
-               | /        
-               |/        
-               |          
-               |          
-               |
-            """,
-        6: """
-               |
-               |
-               |
-               |
-               |
-            """,
-        7: "",
-    }
+st.title("💪 BMI Calculator")
+st.write("Calculate your Body Mass Index (BMI) easily!")
 
+height = st.number_input("Enter your height (in meters):", min_value=0.1, format="%.2f")
+weight = st.number_input("Enter your weight (in kilograms):", min_value=1.0, format="%.2f")
 
-import random
-from words import words
-from hangman_visual import lives_visual_dict
-import string
+if st.button("Calculate BMI"):
+    if height > 0 and weight > 0:
+        bmi = weight / (height ** 2)
+        st.success(f"Your BMI is: {bmi:.2f}")
 
-
-def get_valid_word(words):
-    word = random.choice(words)  # randomly chooses something from the list
-    while '-' in word or ' ' in word:
-        word = random.choice(words)
-
-    return word.upper()
-
-
-def hangman():
-    word = get_valid_word(words)
-    word_letters = set(word)  # letters in the word
-    alphabet = set(string.ascii_uppercase)
-    used_letters = set()  # what the user has guessed
-
-    lives = 7
-
-    # getting user input
-    while len(word_letters) > 0 and lives > 0:
-        # letters used
-        # ' '.join(['a', 'b', 'cd']) --> 'a b cd'
-        print('You have', lives, 'lives left and you have used these letters: ', ' '.join(used_letters))
-
-        # what current word is (ie W - R D)
-        word_list = [letter if letter in used_letters else '-' for letter in word]
-        print(lives_visual_dict[lives])
-        print('Current word: ', ' '.join(word_list))
-
-        user_letter = input('Guess a letter: ').upper()
-        if user_letter in alphabet - used_letters:
-            used_letters.add(user_letter)
-            if user_letter in word_letters:
-                word_letters.remove(user_letter)
-                print('')
-
-            else:
-                lives = lives - 1  # takes away a life if wrong
-                print('\nYour letter,', user_letter, 'is not in the word.')
-
-        elif user_letter in used_letters:
-            print('\nYou have already used that letter. Guess another letter.')
-
+        if bmi < 18.5:
+            st.warning("You're underweight. 🏃‍♂️🍽️")
+        elif 18.5 <= bmi < 24.9:
+            st.success("You have a normal weight. 🎯💪")
+        elif 25 <= bmi < 29.9:
+            st.info("You're overweight. ⚡🏋️‍♂️")
         else:
-            print('\nThat is not a valid letter.')
-
-    # gets here when len(word_letters) == 0 OR when lives == 0
-    if lives == 0:
-        print(lives_visual_dict[lives])
-        print('You died, sorry. The word was', word)
+            st.error("You're obese. ⚠️ Consult a health expert.")
     else:
-        print('YAY! You guessed the word', word, '!!')
-
-
-if __name__ == '__main__':
-    hangman()
+        st.error("Please provide valid height and weight.")
