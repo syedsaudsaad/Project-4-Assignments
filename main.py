@@ -6,7 +6,7 @@ import pandas as pd
 import random
 
 st.set_page_config(page_title="student Data Generator", layout="wide")
-st.title("student CSV File Generator")
+st.title("Student CSV File Generator")
 
 names = ["Ali","Syed","Saud","Saad","Arman","Hussain","Hassan","Taha","Talha","Dawood","Tariq","Bilal","Usman","Fasial","Osman"]
 student = []
@@ -24,5 +24,6 @@ df = pd.DataFrame(student)
 st.subheader("Generator Student Data")
 st.dataframe(df)
 
-cvs_file = df.to_csv(index=False).encode('utf-8')
-st.download_button("Download CSV File", cvs_file, "students.csv", "text/csv")
+csv_file = df.to_csv(index=False).encode('utf-8')
+st.download_button("Download CSV File", csv_file, "students.csv", "text/csv")
+st.success("Student Record Genrated Successfully!")
