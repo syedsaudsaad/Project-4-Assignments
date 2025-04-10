@@ -9,7 +9,7 @@ st.set_page_config(page_title="student Data Generator", layout="wide")
 st.title("student CSV File Generator")
 
 names = ["Ali","Syed","Saud","Saad","Arman","Hussain","Hassan","Taha","Talha","Dawood","Tariq","Bilal","Usman","Fasial","Osman"]
-students = []
+student = []
 for i in range(1,16):
     students = {
         "ID": i,
@@ -18,9 +18,9 @@ for i in range(1,16):
          "Grade":random.choice(["A","B","C","D","E","F"]),
          "Marks":random.randint(40,100)
     }
-    students.append(students)
+    student.append(student)
 
-df = pd.DataFrame(students)
+df = pd.DataFrame(student)
 st.subheader("Generator StudentS Data")
 st.dataframe(df)
 
