@@ -16,12 +16,12 @@ for i in range(1,16):
         "Name":random.choice(names),
         "Age":random.randint(18, 25),
          "Grade":random.choice(["A","B","C","D","E","F"]),
-         "Marks":random.randint(40, 100)
+         "Marks":random.randint(40,100)
     }
     student.append(student)
 
 df = pd.DataFrame(student)
-st.subheader("Generator StudentS Data")
+st.subheader("Generator Student Data")
 st.dataframe(df)
 
 cvs_file = df.to_csv(index=False).encode('utf-8')
