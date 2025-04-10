@@ -1,25 +1,28 @@
-##Assignments 1 to 6
-##BMI calculator project 8
+## assignment 1 to 6
+## Build a Python Website in 15 Minutes With Streamlit project 9
+
 import streamlit as st
+import pandas as pd
+import random
 
-st.title("💪 BMI Calculator")
-st.write("Calculate your Body Mass Index (BMI) easily!")
+st.set_page_config(page_title="student Data Generator", layout="wide")
+st.title("student CSV File Generator")
 
-height = st.number_input("Enter your height (in meters):", min_value=0.1, format="%.2f")
-weight = st.number_input("Enter your weight (in kilograms):", min_value=1.0, format="%.2f")
+names = ["Ali","Syed","Saud","Saad","Arman","Hussain","Hassan","Taha","Talha","Dawood","Tariq","Bilal","Usman","Fasial","Osman"]
+students = []
+for i in range(1,16):
+    students = {
+        "ID": i,
+        "Name":random.choice(names),
+        "Age":random.random(18,25),
+         "Grade":random.choice(["A","B","C","D","E","F"]),
+         "Marks":random.randint(40,100)
+    }
+    students.append(students)
 
-if st.button("Calculate BMI"):
-    if height > 0 and weight > 0:
-        bmi = weight / (height ** 2)
-        st.success(f"Your BMI is: {bmi:.2f}")
+df = pd.DataFrame(students)
+st.subheader("Generator StudentS Data")
+st.dataframe(df)
 
-        if bmi < 18.5:
-            st.warning("You're underweight. 🏃‍♂️🍽️")
-        elif 18.5 <= bmi < 24.9:
-            st.success("You have a normal weight. 🎯💪")
-        elif 25 <= bmi < 29.9:
-            st.info("You're overweight. ⚡🏋️‍♂️")
-        else:
-            st.error("You're obese. ⚠️ Consult a health expert.")
-    else:
-        st.error("Please provide valid height and weight.")
+cvs_file = df.to_csv(index=False).encode('utf-8')
+st.download_button("Download CSV File", cvs_file, "students.csv", "text/csv")
